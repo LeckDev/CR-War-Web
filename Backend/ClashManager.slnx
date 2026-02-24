@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ClashManager.Api/ClashManager.Api.csproj" />
+  <Project Path="ClashManager.Application/ClashManager.Application.csproj" />
+  <Project Path="ClashManager.Domain/ClashManager.Domain.csproj" />
+  <Project Path="ClashManager.Infrastructure/ClashManager.Infrastructure.csproj" />
+</Solution>

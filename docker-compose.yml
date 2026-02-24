@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: clashmanager_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: ClashManagerDb
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: clashmanager_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@clash.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80" # On y accèdera via le port 5050 sur notre navigateur
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - db # On dit à Docker de lancer la BDD avant pgAdmin
+
+      # On définit les disques durs virtuels en bas du fichier
+volumes:
+  postgres_data:
+  pgadmin_data:
