@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+// 1. On importe le hook useAuth de Clerk
+import { useAuth } from "@clerk/nextjs";
 import {
   Card,
   CardHeader,
@@ -14,31 +16,40 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
 export default function RegisterClanPage() {
+  const { getToken } = useAuth();
+
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     tag: "",
     warningThreshold: 1800,
     promotionThreshold: 2800,
-    userId: "user-test-001", // On simulera l'ID en attendant l'auth complète
   });
 
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      const token = await getToken();
+
       const response = await fetch("http://localhost:5225/api/clans", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
+        debugger;
         const data = await response.json();
-        alert(`Clan enregistré avec succès ! ID: ${data.clanId}`);
+        alert(`Clan enregistré avec succès ! ID: ${data.clanId}`); // On utilise .id (Guid)
+      } else if (response.status === 401) {
+        alert("Session expirée ou invalide. Veuillez vous reconnecter.");
       } else {
         const error = await response.json();
-        alert(`Erreur : ${error.detail}`);
+        alert(`Erreur : ${error.detail || "Une erreur est survenue"}`);
       }
     } catch (err) {
       alert("Impossible de contacter le serveur.");
@@ -46,7 +57,6 @@ export default function RegisterClanPage() {
       setLoading(false);
     }
   };
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-slate-50">
       <Card className="w-full max-w-md">

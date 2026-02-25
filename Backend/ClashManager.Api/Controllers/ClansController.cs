@@ -1,11 +1,13 @@
-﻿using ClashManager.Application.Clans.Commands.RegisterClan; // À adapter selon le dossier où tu as mis ta commande
+﻿using ClashManager.Application.Clans.Commands.RegisterClan;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClashManager.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")] // L'URL sera automatiquement /api/clans
+[Authorize]
 public class ClansController : ControllerBase
 {
     private readonly ISender _mediator;

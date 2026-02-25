@@ -3,7 +3,10 @@ using ClashManager.Application.Clans.Commands.RegisterClan;
 using ClashManager.Application.Common.Interfaces;
 using ClashManager.Infrastructure.ExternalApi;
 using ClashManager.Infrastructure.Persistence;
+using ClashManager.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +42,24 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+var authority = builder.Configuration["Clerk:Authority"];
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = authority;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false, // Clerk gère cela pour nous
+            ValidateIssuer = true,
+        };
+    });
+
+builder.Services.AddAuthorization();
 // ==========================================================
 // ZONE 2 : LA CONSTRUCTION (Ce que l'outil EF Core cherchait !)
 // ==========================================================
@@ -58,6 +79,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 // On configure comment l'application gère les requêtes web.
+app.UseAuthentication();
+app.UseAuthorization();  
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseRouting();

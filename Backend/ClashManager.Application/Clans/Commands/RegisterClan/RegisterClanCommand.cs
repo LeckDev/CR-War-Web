@@ -7,28 +7,36 @@ using ClashManager.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-public record RegisterClanCommand(
-    string Tag,
-    int WarningThreshold,
-    int PromotionThreshold,
-    string UserId) : IRequest<Guid>;
+public record RegisterClanCommand : IRequest<Guid>
+{
+    public string Tag { get; init; } = string.Empty;
+    public int WarningThreshold { get; init; }
+    public int PromotionThreshold { get; init; }
+}
 
 // Fichier : RegisterClanCommandHandler.cs
 public class RegisterClanCommandHandler : IRequestHandler<RegisterClanCommand, Guid>
 {
+    private readonly ICurrentUserService _currentUserService;
     private readonly IApplicationDbContext _context;
     private readonly IClashRoyaleService _clashService;
 
-    public RegisterClanCommandHandler(IApplicationDbContext context, IClashRoyaleService clashService)
+    public RegisterClanCommandHandler(IApplicationDbContext context, IClashRoyaleService clashService, ICurrentUserService currentUserService)
     {
         _context = context;
         _clashService = clashService;
+        _currentUserService = currentUserService;
     }
 
     public async Task<Guid> Handle(RegisterClanCommand request, CancellationToken cancellationToken)
     {
+            var userId = _currentUserService.UserId;
+
+        if (string.IsNullOrEmpty(userId))
+            throw new Exception("Utilisateur non identifié.");
+
         var existing = await _context.Clans
-            .FirstOrDefaultAsync(c => c.UserId == request.UserId, cancellationToken);
+            .FirstOrDefaultAsync(c => c.UserId == userId, cancellationToken);
 
         if (existing != null)
             throw new Exception("Tu as déjà enregistré un clan sur ton profil.");
@@ -47,7 +55,7 @@ public class RegisterClanCommandHandler : IRequestHandler<RegisterClanCommand, G
             BadgeId = clanInfo.BadgeId,
             WarningThreshold = request.WarningThreshold,
             PromotionThreshold = request.PromotionThreshold,
-            UserId = request.UserId
+            UserId = userId
         };
 
         _context.Clans.Add(clan);
