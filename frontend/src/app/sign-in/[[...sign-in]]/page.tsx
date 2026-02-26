@@ -2,9 +2,8 @@ import { SignIn } from "@clerk/nextjs";
 
 export default function SignInPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4">
+    <div className="flex flex-col flex-1 items-center justify-center bg-slate-950 px-4">
       <div className="relative w-full max-w-100">
-        {/* Un petit effet de halo derrière le formulaire pour le style gaming */}
         <div className="absolute -inset-1 rounded-lg bg-linear-to-r from-blue-600 to-purple-600 opacity-20 blur"></div>
 
         <SignIn

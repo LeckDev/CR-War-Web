@@ -58,12 +58,12 @@ export default function RegisterClanPage() {
     }
   };
   return (
-    <div className="flex justify-center items-center min-h-screen bg-slate-50">
-      <Card className="w-full max-w-md">
+    <div className="flex justify-center items-center min-h-screen">
+      <Card className="w-full max-w-md border-primary/20">
         <CardHeader>
           <CardTitle>Enregistrer mon Clan</CardTitle>
           <CardDescription>
-            Indiquez le tag de votre clan pour créer votre vitrine de gestion.
+            Ajouter votre clan et vos paramètres de guerres de clan
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
