@@ -11,7 +11,7 @@ export default function HomePage() {
           Dominez la <span className="text-primary">Guerre de Clans</span>
         </h1>
         <p className="max-w-[600px] text-slate-400 text-lg md:text-xl">
-          Suivez les performances de votre clan aux guerres de clan
+          Suivez les performances de votre clan et de ses membres
         </p>
       </section>
 

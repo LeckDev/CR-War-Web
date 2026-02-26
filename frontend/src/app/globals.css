@@ -125,8 +125,11 @@
   }
 }
 
-.cl-footer, .cl-userButtonPopoverFooter {
+.cl-footer, .cl-userButtonPopoverFooter, .cl-internal-1dauvpw {
   display: none !important;
+}
+.cl-internal-15hkgn2 {
+  background: none;
 }
 
 .cl-userButtonAvatarBox {
@@ -134,7 +137,6 @@
   height: 2.25rem !important; 
 }
 
-/* On peut même en profiter pour styliser l'image à l'intérieur */
 .cl-userButtonAvatarImage {
   object-fit: cover;
 }
